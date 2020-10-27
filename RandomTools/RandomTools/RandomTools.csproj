@@ -77,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackendCode\FileMetadata.cs" />
+    <Compile Include="Catalogger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Catalogger.Designer.cs">
+      <DependentUpon>Catalogger.cs</DependentUpon>
+    </Compile>
     <Compile Include="DirectoryReader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +121,9 @@
     <Compile Include="ReadButtons.Designer.cs">
       <DependentUpon>ReadButtons.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Catalogger.resx">
+      <DependentUpon>Catalogger.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DirectoryReader.resx">
       <DependentUpon>DirectoryReader.cs</DependentUpon>
     </EmbeddedResource>
