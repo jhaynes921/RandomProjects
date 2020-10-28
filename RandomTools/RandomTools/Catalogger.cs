@@ -16,7 +16,8 @@ namespace RandomTools
 		public Catalogger()
 		{
 			InitializeComponent();
-			tbDirectory.Text = "D:\\AP";
+			//tbDirectory.Text = "D:\\AP";
+			tbDirectory.Text = "H:\\John\\Astronomy\\HH\\CAL TIF";
 		}
 
 		private void btnExecute_Click(object sender, EventArgs e)
@@ -34,10 +35,10 @@ namespace RandomTools
 		{
 			string[] files = Directory.GetFiles(dirName);
 			foreach (string file in files) { ProcessFileToTable(file); }
-
-
-
 		}
+
+
+		#region Initialize Tables
 		public DataTable CreateErrorTable() 
 		{
 			DataTable dt = new DataTable();
@@ -68,6 +69,8 @@ namespace RandomTools
 			//dt.Columns.Add("x", typeof(string));
 			return dt;
 		}
+		#endregion
+
 		public void ProcessFileToTable(string filePath) 
 		{
 			DataRow dr = dtFileData.NewRow();
@@ -88,10 +91,15 @@ namespace RandomTools
 			dtFileData.Rows.Add(dr);
 		}
 
-		public void WriteToErrorTable(string errorMessage, string processName, string fileName, string errorNotes, Exception ex) 
+		public void WriteToErrorTable(string errorMessage, string processName = "", string fileName = "", string errorNotes = "", Exception ex = null) 
 		{
-
 			DataRow dr = dtErrorData.NewRow();
+			dr["ErrorTime"] = DateTime.Now;
+			dr["ErrorMessage"] = errorMessage;
+			dr["File"] = fileName;
+			dr["FullException"] = ex.ToString();
+			dr["ProcessName"] = processName;
+			dr["ErrorNotes"] = errorNotes;
 		}
 		
 
