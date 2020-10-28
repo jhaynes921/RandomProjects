@@ -24,12 +24,25 @@ namespace RandomTools
 		{
 			dtFileData = CreateFileTable();
 			dtErrorData = CreateErrorTable();
-
-
+			CatalogedFiles = 0;
+			ErroredFiles = 0;
+			ProcessedFiles = 0;
+			ProcessedDirectories = 0;
+			CataloggedDirectories = 0;
+			ErroredDirectories = 0;
+			SubDirectoriesToCatalog = new List<string>();
 		}
 
 		public DataTable dtFileData;
 		public DataTable dtErrorData;
+		public int CatalogedFiles;
+		public int ErroredFiles;
+		public int ProcessedFiles;
+		public int ProcessedDirectories;
+		public int CataloggedDirectories;
+		public int ErroredDirectories;
+		public List<string> SubDirectoriesToCatalog;
+
 
 		public void GetDirectoryContents(string dirName) 
 		{
@@ -37,6 +50,13 @@ namespace RandomTools
 			foreach (string file in files) { ProcessFileToTable(file); }
 		}
 
+		public List<string> GetSubDirectories(string dirName) 
+		{
+			string[] dirList = Directory.GetDirectories(dirName);
+			List<string> subDirectories = new List<string>();
+			foreach (string dir in dirList) { subDirectories.Add(dir); }
+			return subDirectories;
+		}
 
 		#region Initialize Tables
 		public DataTable CreateErrorTable() 
@@ -73,22 +93,33 @@ namespace RandomTools
 
 		public void ProcessFileToTable(string filePath) 
 		{
-			DataRow dr = dtFileData.NewRow();
-			FileInfo fi = new FileInfo(filePath);
-			string containingDir = Path.GetFileName(Path.GetDirectoryName(filePath));
-			dr["FullPath"] = filePath;
-			dr["FileName"] = fi.Name;
-			dr["NameOnly"] = Path.GetFileNameWithoutExtension(filePath);
-			dr["Extension"] = fi.Extension;
-			dr["DirectoryPath"] = fi.DirectoryName;
-			dr["ContainingDirectoryName"] = Path.GetFileName(Path.GetDirectoryName(filePath));
-			dr["FileSize"] = fi.Length;
-			dr["CreatedDate"] = fi.CreationTimeUtc;
-			dr["LastModified"] = fi.LastWriteTimeUtc;
-			dr["LastAccessed"] = fi.LastAccessTimeUtc;
-			dr["IsReadOnly"] = fi.IsReadOnly;
-			dr["CatalogDate"] = DateTime.Now;
-			dtFileData.Rows.Add(dr);
+			ProcessedFiles++;
+			try
+			{
+				DataRow dr = dtFileData.NewRow();
+				FileInfo fi = new FileInfo(filePath);
+				string containingDir = Path.GetFileName(Path.GetDirectoryName(filePath));
+				dr["FullPath"] = filePath;
+				dr["FileName"] = fi.Name;
+				dr["NameOnly"] = Path.GetFileNameWithoutExtension(filePath);
+				dr["Extension"] = fi.Extension;
+				dr["DirectoryPath"] = fi.DirectoryName;
+				dr["ContainingDirectoryName"] = Path.GetFileName(Path.GetDirectoryName(filePath));
+				dr["FileSize"] = fi.Length;
+				dr["CreatedDate"] = fi.CreationTimeUtc;
+				dr["LastModified"] = fi.LastWriteTimeUtc;
+				dr["LastAccessed"] = fi.LastAccessTimeUtc;
+				dr["IsReadOnly"] = fi.IsReadOnly;
+				dr["CatalogDate"] = DateTime.Now;
+				dtFileData.Rows.Add(dr);
+				CatalogedFiles++;
+			}
+			catch (Exception ex)
+			{
+				WriteToErrorTable(ex.Message, "ProcessFileToTable()", filePath, "File process failed.", ex);
+				ErroredFiles++;
+			}
+
 		}
 
 		public void WriteToErrorTable(string errorMessage, string processName = "", string fileName = "", string errorNotes = "", Exception ex = null) 
