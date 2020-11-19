@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BackendCode\FileMetadata.cs" />
+    <Compile Include="BackendCode\MemClearV1.cs" />
     <Compile Include="Catalogger.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +101,12 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MemClear.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MemClear.Designer.cs">
+      <DependentUpon>MemClear.cs</DependentUpon>
     </Compile>
     <Compile Include="MergeTextFiles.cs">
       <SubType>Form</SubType>
@@ -132,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MemClear.resx">
+      <DependentUpon>MemClear.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MergeTextFiles.resx">
       <DependentUpon>MergeTextFiles.cs</DependentUpon>

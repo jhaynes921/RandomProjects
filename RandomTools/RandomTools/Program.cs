@@ -19,7 +19,7 @@ namespace RandomTools
 			//Application.Run(new MetaDataTesting());
 			//Application.Run(new ReadButtons());
 			//Application.Run(new DirectoryTool());
-			Application.Run(new Catalogger());
+			Application.Run(new MemClear());
 		}
 	}
 }

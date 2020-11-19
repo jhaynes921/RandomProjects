@@ -13,6 +13,18 @@ namespace RandomTools
 {
 	public partial class Catalogger : Form
 	{
+
+		#region Class Variables
+		public DataTable dtFileData;
+		public DataTable dtErrorData;
+		public int CatalogedFiles;
+		public int ErroredFiles;
+		public int ProcessedFiles;
+		public int ProcessedDirectories;
+		public int CataloggedDirectories;
+		public int ErroredDirectories;
+		public List<string> SubDirectoriesToCatalog;
+		#endregion
 		public Catalogger()
 		{
 			InitializeComponent();
@@ -21,6 +33,26 @@ namespace RandomTools
 		}
 
 		private void btnExecute_Click(object sender, EventArgs e)
+		{
+			InitializeClassVariables();
+			string initialDir = tbDirectory.Text;
+			if (!Directory.Exists(initialDir))
+			{
+				//handle error
+				return;
+			}
+			if (tglIncludeSubdirectories.Checked == true)
+			{
+				GetSubDirectories(initialDir);
+				foreach (string dir in SubDirectoriesToCatalog) { GetDirectoryContents(dir); }
+			}
+			else 
+			{
+				GetDirectoryContents(initialDir);
+			}
+		}
+
+		public void InitializeClassVariables() 
 		{
 			dtFileData = CreateFileTable();
 			dtErrorData = CreateErrorTable();
@@ -33,16 +65,6 @@ namespace RandomTools
 			SubDirectoriesToCatalog = new List<string>();
 		}
 
-		public DataTable dtFileData;
-		public DataTable dtErrorData;
-		public int CatalogedFiles;
-		public int ErroredFiles;
-		public int ProcessedFiles;
-		public int ProcessedDirectories;
-		public int CataloggedDirectories;
-		public int ErroredDirectories;
-		public List<string> SubDirectoriesToCatalog;
-
 
 		public void GetDirectoryContents(string dirName) 
 		{
@@ -50,12 +72,17 @@ namespace RandomTools
 			foreach (string file in files) { ProcessFileToTable(file); }
 		}
 
-		public List<string> GetSubDirectories(string dirName) 
+
+		
+
+
+
+		public void GetSubDirectories(string dirName) 
 		{
 			string[] dirList = Directory.GetDirectories(dirName);
-			List<string> subDirectories = new List<string>();
-			foreach (string dir in dirList) { subDirectories.Add(dir); }
-			return subDirectories;
+			foreach (string dir in dirList) { SubDirectoriesToCatalog.Add(dir); }
+			foreach (string dir in SubDirectoriesToCatalog) { GetSubDirectories(dir); }
+
 		}
 
 		#region Initialize Tables
